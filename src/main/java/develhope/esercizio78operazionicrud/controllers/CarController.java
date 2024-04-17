@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -63,12 +64,14 @@ public class CarController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSingleCar(@PathVariable long id) {
+    public ResponseEntity<Void> deleteSingleCar(@PathVariable long id) {
         if (carRepository.existsById(id)) {
             carRepository.deleteById(id);
+            return ResponseEntity.ok().build();
         } else {
-            throw new NullPointerException("car non disponibile : " + id);
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+
     }
 
     @DeleteMapping("")
